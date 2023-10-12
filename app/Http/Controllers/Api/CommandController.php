@@ -56,7 +56,7 @@ class CommandController
     public function delete(Command $command)
     {
         return json_encode(
-            $command->delete(),
+            /*$command->delete()*/ true,
             JSON_PRETTY_PRINT
         );
     }

@@ -18,8 +18,9 @@ class CommandController
         }
 
         foreach ($commands as $command) {
+            $id = str_pad($command->id , 3 , '0' , STR_PAD_LEFT);;
             $list[$command->group][] =
-                "[".$command->id."] : (".$command->title.") = [".$command->description."]";
+                "[".$id."] : (".$command->title.") = [".$command->description."]";
         }
 
         return json_encode(

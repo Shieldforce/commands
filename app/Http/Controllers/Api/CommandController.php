@@ -23,7 +23,7 @@ class CommandController
                 "[".$id."] : (".$command->title.") = [".$command->description."]";
         }
 
-        if(php_sapi_name() === 'cli-server') {
+        if(app()->runningInConsole()) {
             return json_encode(
                 $list,
                 JSON_PRETTY_PRINT

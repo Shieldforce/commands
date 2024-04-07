@@ -26,7 +26,7 @@ class CommandController
         }
 
         foreach ($commands as $command) {
-            $id = str_pad($command->id , 3 , '0' , STR_PAD_LEFT);;
+            $id = str_pad($command->id , 4 , '0' , STR_PAD_LEFT);;
             $list[$command->group][] =
                 "[".$id."] : (".$command->title.") = [".$command->description."]";
         }

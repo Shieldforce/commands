@@ -14,6 +14,10 @@ class CommandController
         TypeRequestEnum $type = TypeRequestEnum::browser
     )
     {
+        if($group == "all") {
+            $group = null;
+        }
+
         $list = [];
         $commands = Command::get(["id", "title", "description", "group"]);
         if ($group) {

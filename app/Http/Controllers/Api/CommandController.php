@@ -2,13 +2,17 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Enums\TypeRequestEnum;
 use App\Http\Requests\Api\StoreCommandRequest;
 use App\Http\Requests\Api\UpdateCommandRequest;
 use App\Models\Command;
 
 class CommandController
 {
-    public function index(string $group = null)
+    public function index(
+        string $group = null,
+        TypeRequestEnum $type = TypeRequestEnum::browser
+    )
     {
         $list = [];
         $commands = Command::get(["id", "title", "description", "group"]);
@@ -23,7 +27,7 @@ class CommandController
                 "[".$id."] : (".$command->title.") = [".$command->description."]";
         }
 
-        if(!app()->runningInConsole()) {
+        if($type == TypeRequestEnum::browser) {
             return response()->json($list);
         }
 

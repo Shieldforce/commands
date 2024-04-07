@@ -31,6 +31,8 @@ class CommandController
                 "[".$id."] : (".$command->title.") = [".$command->description."]";
         }
 
+        sort($list);
+
         if($type == TypeRequestEnum::browser->value) {
             return response()->json($list);
         }

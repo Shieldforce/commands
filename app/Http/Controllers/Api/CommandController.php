@@ -24,6 +24,7 @@ class CommandController
         }
 
         if(app()->runningInConsole()) {
+            dd("aqui");
             return json_encode(
                 $list,
                 JSON_PRETTY_PRINT

@@ -23,10 +23,14 @@ class CommandController
                 "[".$id."] : (".$command->title.") = [".$command->description."]";
         }
 
-        return json_encode(
-            $list,
-            JSON_PRETTY_PRINT
-        );
+        if(php_sapi_name() === 'cli-server') {
+            return json_encode(
+                $list,
+                JSON_PRETTY_PRINT
+            );
+        }
+
+        return response()->json($list);
     }
 
     public function store(StoreCommandRequest $request)

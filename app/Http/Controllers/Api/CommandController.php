@@ -23,14 +23,14 @@ class CommandController
                 "[".$id."] : (".$command->title.") = [".$command->description."]";
         }
 
-        if(app()->runningInConsole()) {
-            return json_encode(
-                $list,
-                JSON_PRETTY_PRINT
-            );
+        if(!app()->runningInConsole()) {
+            return response()->json($list);
         }
 
-        return response()->json($list);
+        return json_encode(
+            $list,
+            JSON_PRETTY_PRINT
+        );
     }
 
     public function store(StoreCommandRequest $request)

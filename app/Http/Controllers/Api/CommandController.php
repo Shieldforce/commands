@@ -11,7 +11,7 @@ class CommandController
 {
     public function index(
         string $group = null,
-        TypeRequestEnum $type = TypeRequestEnum::browser
+        int $type = 1
     )
     {
         if($group == "all") {
@@ -31,7 +31,7 @@ class CommandController
                 "[".$id."] : (".$command->title.") = [".$command->description."]";
         }
 
-        if($type == TypeRequestEnum::browser) {
+        if($type == TypeRequestEnum::browser->value) {
             return response()->json($list);
         }
 

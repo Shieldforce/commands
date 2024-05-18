@@ -2,7 +2,8 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
+use EloquentFilter\Filterable;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -10,36 +11,61 @@ use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable, Filterable;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
     protected $fillable = [
         'name',
         'email',
+        'picture',
         'password',
+        'client_id',
     ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var array<int, string>
-     */
     protected $hidden = [
         'password',
         'remember_token',
     ];
 
-    /**
-     * The attributes that should be cast.
-     *
-     * @var array<string, string>
-     */
     protected $casts = [
         'email_verified_at' => 'datetime',
-        'password' => 'hashed',
     ];
+
+    /**
+     * Relations
+     */
+    public function roles()
+    {
+        return $this->belongsToMany(
+            Role::class,
+            "users_roles",
+            "user_id",
+            "role_id",
+        )->withPivot(["id", "user_id", "role_id"]);
+    }
+
+    public function passwordReset()
+    {
+        return $this->hasOne(PasswordReset::class, "email", "email");
+    }
+
+    /**
+     * Mutators
+     */
+
+    protected function password(): Attribute
+    {
+        return Attribute::make(
+            set: fn($value) => bcrypt($value),
+            get: fn($value) => $value,
+        );
+    }
+
+    protected function picture(): Attribute
+    {
+        return Attribute::make(
+            set: fn($value) => $value,
+            get: fn($value) => isset($value) ? env("APP_URL") . "/storage/" .$value :
+                env("APP_URL") . "/img/avatar.png",
+        );
+    }
 }

@@ -1,12 +1,12 @@
 <?php
 
-use App\Http\Controllers\Api\CommandController;
+use App\Http\Controllers\Api\DocController;
 use Illuminate\Support\Facades\Route;
 
 $model = "doc";
 
 Route::prefix("/{$model}")
-    ->controller(CommandController::class)
+    ->controller(DocController::class)
     ->name("api.{$model}.")->group(function () use ($model) {
 
         Route::get("/", "index")

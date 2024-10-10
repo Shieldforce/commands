@@ -39,7 +39,7 @@ class CommandController
 
         return json_encode(
             $list,
-            JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE
+            JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES
         );
     }
 

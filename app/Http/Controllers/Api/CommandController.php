@@ -14,32 +14,32 @@ class CommandController
         int $type = 1
     )
     {
-        if($group == "all") {
+        if ($group == "all") {
             $group = null;
         }
 
-        $list = [];
+        $list     = [];
         $commands = Command::get(["id", "title", "description", "group"]);
         if ($group) {
             $commands = Command::where("group", $group)
-                ->get(["id", "title", "description", "group"]);
+                               ->get(["id", "title", "description", "group"]);
         }
 
         foreach ($commands as $command) {
-            $id = str_pad($command->id , 4 , '0' , STR_PAD_LEFT);;
+            $id = str_pad($command->id, 4, '0', STR_PAD_LEFT);;
             $list[$command->group][] =
-                "[".$id."] : (".$command->title.") = [".$command->description."]";
+                "[" . $id . "] : (" . $command->title . ") = [" . $command->description . "]";
         }
 
         ksort($list);
 
-        if($type == TypeRequestEnum::browser->value) {
+        if ($type == TypeRequestEnum::browser->value) {
             return response()->json($list);
         }
 
         return json_encode(
             $list,
-            JSON_PRETTY_PRINT
+            JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE
         );
     }
 
@@ -59,7 +59,8 @@ class CommandController
                 $command,
                 JSON_PRETTY_PRINT
             );
-        } catch (\Exception $exception) {
+        }
+        catch (\Exception $exception) {
             return json_encode(
                 $exception,
                 JSON_PRETTY_PRINT
@@ -70,7 +71,7 @@ class CommandController
     public function delete(Command $command)
     {
         return json_encode(
-            /*$command->delete()*/ true,
+        /*$command->delete()*/ true,
             JSON_PRETTY_PRINT
         );
     }

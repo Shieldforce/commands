@@ -11,16 +11,16 @@ class UsersSeeders extends Seeder
     {
         $data1 = [
             'name'      => 'SA',
-            'email'     => 'shieldforce2@gmail.com',
+            'email'     => 'admin@admin.com',
             'password'  => env('ADMIN_SEED_PASSWORD', ''),
-            'client_id' => 'shieldforce'
+            'client_id' => 'client'
         ];
 
         $data1b = $data1;
 
         unset($data1["password"]);
 
-        if (!User::where("email", "shieldforce2@gmail.com")->first()) {
+        if (!User::where("email", "admin@admin.com")->first()) {
             $user1 = User::updateOrCreate($data1, $data1b);
             $user1->roles()->sync([1], true);
         }

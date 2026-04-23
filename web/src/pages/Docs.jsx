@@ -647,22 +647,71 @@ journalctl --user -u shieldforce-web -f`}</Code>
       </Section>
 
       <Section id="terminal-client" title="Cliente de terminal (Python TUI)">
-        <P>Cliente interativo em <code className="text-xs bg-gray-100 dark:bg-gh-border px-1 rounded">client/</code>
-        que consome a mesma API com autenticacao por Bearer token.</P>
-        <Code lang="bash">{`cd client
-pip install -r requirements.txt
-./commands-tui`}</Code>
-        <Table
-          headers={['Arquivo', 'Funcao']}
-          rows={[
-            [<code className="text-xs font-mono">main.py</code>,       'Menu interativo — login, registro, recuperacao, CRUD'],
-            [<code className="text-xs font-mono">api.py</code>,        'Cliente HTTP — sessao salva em ~/.config/shieldforce/session.json'],
-            [<code className="text-xs font-mono">tui_viewer.py</code>, 'Visualizador TUI (Textual) com atalhos de teclado'],
-            [<code className="text-xs font-mono">ui.py</code>,         'Utilitarios Rich — tabelas, cores, parser de comandos'],
-          ]}
-        />
-        <P>O cliente envia <code className="text-xs bg-gray-100 dark:bg-gh-border px-1 rounded">client: "shieldforce"</code>.
-        O frontend web envia <code className="text-xs bg-gray-100 dark:bg-gh-border px-1 rounded">client: "front"</code>.</P>
+        <P>Cliente interativo em <code className="text-xs bg-gray-100 dark:bg-gh-border px-1 rounded">client/</code> que
+        consome a mesma API REST com autenticacao por Bearer token. Interface no terminal com menus navegaveis,
+        visualizador full-screen e atalhos de teclado.</P>
+
+        <Sub id="terminal-requisitos" title="Requisitos">
+          <Table
+            headers={['Requisito', 'Versao minima', 'Verificar']}
+            rows={[
+              ['Python',  '3.10+', <Code lang="bash">{'python3 --version'}</Code>],
+              ['pip',     'qualquer', <Code lang="bash">{'pip --version'}</Code>],
+              ['Git',     'qualquer', <Code lang="bash">{'git --version'}</Code>],
+            ]}
+          />
+        </Sub>
+
+        <Sub id="terminal-instalacao" title="Instalacao">
+          <P>1. Clone o repositorio (se ainda nao tiver feito):</P>
+          <Code lang="bash">{`git clone https://github.com/Shieldforce/commands.git
+cd commands`}</Code>
+          <P>2. Instale as dependencias Python:</P>
+          <Code lang="bash">{`cd client
+pip install -r requirements.txt`}</Code>
+          <P>3. Confirme que o executavel tem permissao:</P>
+          <Code lang="bash">{'chmod +x commands-tui'}</Code>
+          <P>4. Execute:</P>
+          <Code lang="bash">{'./commands-tui'}</Code>
+          <P>Na primeira execucao o cliente pede login ou criacao de conta. A sessao e salva em
+          <code className="text-xs bg-gray-100 dark:bg-gh-border px-1 rounded mx-1">~/.config/shieldforce/session.json</code>
+          e restaurada automaticamente nas proximas execucoes.</P>
+        </Sub>
+
+        <Sub id="terminal-atalhos" title="Atalhos de teclado">
+          <Table
+            headers={['Tecla', 'Acao']}
+            rows={[
+              [<Kbd>e</Kbd>,         'Editar comando selecionado'],
+              [<Kbd>d</Kbd>,         'Deletar comando selecionado'],
+              [<Kbd>c</Kbd>,         'Copiar descricao para clipboard'],
+              [<Kbd>n</Kbd>,         'Criar novo comando'],
+              [<Kbd>/</Kbd>,         'Abrir busca'],
+              [<Kbd>?</Kbd>,         'Ajuda'],
+              [<Kbd>q</Kbd>,         'Voltar / sair'],
+              [<><Kbd>j</Kbd> / <Kbd>k</Kbd></>, 'Mover cursor (vim-style)'],
+              [<><Kbd>↑</Kbd> / <Kbd>↓</Kbd></>, 'Mover cursor'],
+              [<><Kbd>Ctrl</Kbd>+<Kbd>S</Kbd></>, 'Salvar edicao'],
+              [<Kbd>Esc</Kbd>,       'Cancelar / fechar painel'],
+            ]}
+          />
+        </Sub>
+
+        <Sub id="terminal-arquivos" title="Estrutura dos arquivos">
+          <Table
+            headers={['Arquivo', 'Funcao']}
+            rows={[
+              [<code className="text-xs font-mono">commands-tui</code>, 'Script de entrada — chama main.py com python3'],
+              [<code className="text-xs font-mono">main.py</code>,       'Menu interativo — login, registro, recuperacao, CRUD'],
+              [<code className="text-xs font-mono">api.py</code>,        'Cliente HTTP — sessao salva em ~/.config/shieldforce/session.json'],
+              [<code className="text-xs font-mono">tui_viewer.py</code>, 'Visualizador TUI (Textual) com atalhos de teclado'],
+              [<code className="text-xs font-mono">ui.py</code>,         'Utilitarios Rich — tabelas, cores, parser de comandos'],
+              [<code className="text-xs font-mono">requirements.txt</code>, 'Dependencias: rich, requests, InquirerPy'],
+            ]}
+          />
+          <P>O cliente envia <code className="text-xs bg-gray-100 dark:bg-gh-border px-1 rounded">client: "shieldforce"</code> em
+          todas as requisicoes. O frontend web envia <code className="text-xs bg-gray-100 dark:bg-gh-border px-1 rounded">client: "front"</code>.</P>
+        </Sub>
       </Section>
 
     </div>
@@ -1138,7 +1187,12 @@ const TECH_NAV = [
     { id: 'systemd-cmds', label: 'Comandos' },
     { id: 'systemd-deploy', label: 'Deploy' },
   ]},
-  { id: 'terminal-client', label: 'Cliente terminal' },
+  { id: 'terminal-client', label: 'Cliente terminal', sub: [
+    { id: 'terminal-requisitos',  label: 'Requisitos' },
+    { id: 'terminal-instalacao',  label: 'Instalacao' },
+    { id: 'terminal-atalhos',     label: 'Atalhos' },
+    { id: 'terminal-arquivos',    label: 'Arquivos' },
+  ]},
 ]
 
 const API_NAV = [

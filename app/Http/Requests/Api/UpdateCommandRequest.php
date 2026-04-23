@@ -8,7 +8,7 @@ class UpdateCommandRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     public function rules(): array
@@ -17,6 +17,7 @@ class UpdateCommandRequest extends FormRequest
             "title"       => ['string'],
             "description" => ['string'],
             "group"       => ['string'],
+            "type"        => ['string', 'in:command,task'],
         ];
     }
 }

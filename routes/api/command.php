@@ -9,6 +9,10 @@ Route::prefix("/{$model}")
     ->controller(CommandController::class)
     ->name("api.{$model}.")->group(function () use ($model) {
 
+        Route::get("/{group?}/{type?}", "index")
+            ->name("index")
+            ->middleware(["roles:all"]);
+
         Route::post("/", "store")
             ->name("store")
             ->middleware(["ability:api.{$model}.store", "roles:all"]);

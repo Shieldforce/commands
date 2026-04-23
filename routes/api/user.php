@@ -6,31 +6,30 @@ use Illuminate\Support\Facades\Route;
 $model = "user";
 
 Route::prefix("/{$model}")
-    ->controller( UserController::class )
+    ->controller(UserController::class)
     ->name("api.{$model}.")->group(function () use ($model) {
 
     Route::get("/", "index")
         ->name("index")
-        ->middleware(["ability:api.{$model}.index", "roles:all"]);
+        ->middleware(["roles:SA,admin"]);
 
     Route::get("/{{$model}?}", "show")
         ->name("show")
-        ->middleware(["ability:api.{$model}.index", "roles:all"]);
+        ->middleware(["roles:SA,admin"]);
 
     Route::post("/", "store")
         ->name("store")
-        ->middleware("roles:all");
+        ->middleware(["roles:SA,admin"]);
 
     Route::put("/{{$model}?}", "update")
         ->name("update")
-        ->middleware(["ability:api.{$model}.index", "roles:all"]);
+        ->middleware(["roles:SA,admin"]);
 
     Route::post("/savePicture", "savePicture")
         ->name("savePicture")
-        ->middleware(["ability:api.{$model}.index", "roles:all"]);
+        ->middleware(["roles:SA,admin"]);
 
     Route::delete("/{{$model}?}", "destroy")
         ->name("destroy")
-        ->middleware(["ability:api.{$model}.index", "roles:SA"]);
-
+        ->middleware(["roles:SA"]);
 });

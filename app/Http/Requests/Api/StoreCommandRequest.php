@@ -17,6 +17,7 @@ class StoreCommandRequest extends FormRequest
             "title"       => ['string', 'required'],
             "description" => ['string', 'required'],
             "group"       => ['string', 'required'],
+            "type"        => ['string', 'in:command,task'],
         ];
     }
 }

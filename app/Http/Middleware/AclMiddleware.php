@@ -12,7 +12,7 @@ class AclMiddleware
 {
     public function handle(Request $request, Closure $next)
     {
-        if($this->verifyRole($request->user(), "SA")) {
+        if ($this->verifyRole($request->user(), "SA") || $this->verifyRole($request->user(), "admin")) {
             return $next($request);
         }
 

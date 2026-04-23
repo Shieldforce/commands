@@ -1,0 +1,16 @@
+[Unit]
+Description=ShieldForce Web Frontend
+After=network.target
+
+[Service]
+Type=simple
+User=alexandrefn
+WorkingDirectory=/home/alexandrefn/projects/shieldforce/prod/commands/web
+Environment=PATH=/home/alexandrefn/.asdf/shims:/home/alexandrefn/.asdf/bin:/usr/local/bin:/usr/bin:/bin
+ExecStartPre=/home/alexandrefn/.asdf/shims/npm run build
+ExecStart=/home/alexandrefn/.asdf/shims/npx vite preview
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

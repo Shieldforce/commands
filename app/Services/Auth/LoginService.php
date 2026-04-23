@@ -60,9 +60,14 @@ class LoginService
 
         $user->tokens()->where("name", $request->client)->delete();
 
-        $token = $user->createToken($request->client, []);
-
         SetRoutesService::run();
+
+        $rolesIds = $user->roles()->get()->pluck("id")->toArray();
+        $permissionsNames = Permission::whereHas("roles", function ($q) use ($rolesIds) {
+            $q->whereIn("role_id", $rolesIds);
+        })->pluck("name")->toArray();
+
+        $token = $user->createToken($request->client, array_values($permissionsNames));
 
         return [
             'type_token'   => 'Bearer',

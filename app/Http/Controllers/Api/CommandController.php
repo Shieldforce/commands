@@ -9,26 +9,36 @@ use App\Models\Command;
 
 class CommandController
 {
-    public function index(
-        string $group = null,
-        int $type = 1
-    )
+    private function isPrivileged(): bool
     {
-        if ($group == "all") {
+        $roles = auth()->user()->roles->pluck('name')->toArray();
+        return count(array_intersect($roles, ['SA', 'admin'])) > 0;
+    }
+
+    public function index(string $group = null, int $type = 1)
+    {
+        if ($group === 'all') {
             $group = null;
         }
 
-        $list     = [];
-        $commands = Command::get(["id", "title", "description", "group"]);
-        if ($group) {
-            $commands = Command::where("group", $group)
-                               ->get(["id", "title", "description", "group"]);
+        $query = Command::query();
+
+        if (!$this->isPrivileged()) {
+            $query->where('user_id', auth()->id());
         }
 
+        if ($group) {
+            $query->where('group', $group);
+        }
+
+        $commands = $query->get(['id', 'title', 'description', 'group', 'type']);
+
+        $list = [];
         foreach ($commands as $command) {
-            $id = str_pad($command->id, 4, '0', STR_PAD_LEFT);;
+            $id   = str_pad($command->id, 4, '0', STR_PAD_LEFT);
+            $t    = $command->type ?? 'command';
             $list[$command->group][] =
-                "[" . $id . "] : (" . $command->title . ") = [" . $command->description . "]";
+                "[{$id}] : ({$command->title}) = [{$command->description}] {{$t}}";
         }
 
         ksort($list);
@@ -37,42 +47,37 @@ class CommandController
             return response()->json($list);
         }
 
-        return json_encode(
-            $list,
-            JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES
-        );
+        return json_encode($list, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
     }
 
     public function store(StoreCommandRequest $request)
     {
-        return json_encode(
-            Command::create($request->validated()),
-            JSON_PRETTY_PRINT
-        );
+        $data            = $request->validated();
+        $data['user_id'] = auth()->id();
+
+        return json_encode(Command::create($data), JSON_PRETTY_PRINT);
     }
 
     public function update(UpdateCommandRequest $request, Command $command)
     {
+        if (!$this->isPrivileged() && $command->user_id !== auth()->id()) {
+            return response()->json(['error' => 'Unauthorized'], 403);
+        }
+
         try {
             $command->update($request->validated());
-            return json_encode(
-                $command,
-                JSON_PRETTY_PRINT
-            );
-        }
-        catch (\Exception $exception) {
-            return json_encode(
-                $exception,
-                JSON_PRETTY_PRINT
-            );
+            return json_encode($command, JSON_PRETTY_PRINT);
+        } catch (\Exception $e) {
+            return json_encode(['error' => $e->getMessage()], JSON_PRETTY_PRINT);
         }
     }
 
     public function delete(Command $command)
     {
-        return json_encode(
-        /*$command->delete()*/ true,
-            JSON_PRETTY_PRINT
-        );
+        if (!$this->isPrivileged() && $command->user_id !== auth()->id()) {
+            return response()->json(['error' => 'Unauthorized'], 403);
+        }
+
+        return json_encode($command->delete(), JSON_PRETTY_PRINT);
     }
 }

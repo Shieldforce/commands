@@ -11,22 +11,21 @@ Route::prefix("/{$model}")
 
         Route::get("/", "index")
             ->name("index")
-            ->middleware(["ability:api.{$model}.index", "roles:SA"]);
+            ->middleware(["roles:SA,admin"]);
 
         Route::get("/{{$model}?}", "show")
             ->name("show")
-            ->middleware(["ability:api.{$model}.show", "roles:SA"]);
+            ->middleware(["roles:SA,admin"]);
 
         Route::post("/", "store")
             ->name("store")
-            ->middleware(["ability:api.{$model}.store", "roles:SA"]);
+            ->middleware(["roles:SA,admin"]);
 
         Route::put("/{{$model}?}", "update")
             ->name("update")
-            ->middleware(["ability:api.{$model}.update", "roles:SA"]);
+            ->middleware(["roles:SA,admin"]);
 
         Route::delete("/{{$model}?}", "destroy")
             ->name("destroy")
-            ->middleware(["ability:api.{$model}.destroy", "roles:SA"]);
-
+            ->middleware(["roles:SA"]);
     });

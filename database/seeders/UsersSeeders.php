@@ -12,7 +12,7 @@ class UsersSeeders extends Seeder
         $data1 = [
             'name'      => 'SA',
             'email'     => 'shieldforce2@gmail.com',
-            'password'  => "***SENHA_REMOVIDA***",
+            'password'  => env('ADMIN_SEED_PASSWORD', ''),
             'client_id' => 'shieldforce'
         ];
 
